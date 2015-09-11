@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.julienxx/clj-slack "0.4.3"]]
+                 [slack-rtm "0.1.0"]]
   :main ^:skip-aot slacko.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
