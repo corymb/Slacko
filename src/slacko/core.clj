@@ -1,7 +1,18 @@
 (ns slacko.core
   (:gen-class))
 
+(use 'slack-rtm.core)
+(def rtm-conn (connect ""))
+
+(def events-publication (:events-publication rtm-conn))
+
+(defn message-handler [message]
+  (println (:text message)))
+
+(def message-receiver message-handler)
+
+
 (defn -main
-  "I don't do a whole lot ... yet."
+  ;; (println (System/getenv "SLACK_TOKEN")))
   [& args]
-  (println "Hello, World!"))
+  (sub-to-event events-publication :message message-receiver))
