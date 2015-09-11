@@ -12,11 +12,6 @@
 
 (def events-publication (:events-publication rtm-conn))
 
-(defn message-handler [message]
-  (println [123 (:text message)]))
-
-(def message-receiver message-handler)
-
 (defn parse-deploy-string [deploy-string]
   (zipmap [:deploy :target :branch] (str/split deploy-string #" "))
 )
@@ -35,12 +30,14 @@
 )
 
 (defn message-handler [message]
-  "Parses mesages for keywords."
   (case (re-find #"^!([\w]*)" message)
     "!deploy" (dispatcher :deploy message)
     nil
   )
-)
+  (println [123 (:text message)]))
+
+(def message-receiver message-handler)
+
 
 ;; (defn send-message [channel]
 ;;   "Sends a message to the channel."
@@ -52,7 +49,7 @@
   (sub-to-event events-publication :message message-receiver)
   ;; (-> (deploy "ls") println )
 
-  (println (:deploy dispatcher))
+  ;; (println (:deploy dispatcher))
   ;; (println (message-handler "!deploy staging master"))
   ;; (println rtm-conn)
 )
