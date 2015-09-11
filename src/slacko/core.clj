@@ -2,17 +2,20 @@
   (:gen-class))
 
 (use 'slack-rtm.core)
-(def rtm-conn (connect "xoxb-10539963701-hosor4JglBTaEn1ZPoQvtWuJ"))
+(use '[clojure.java.shell :only [sh]])
+(require '[clojure.string :as str])
+
+(if-let
+  [token (System/getenv "SLACK_TOKEN")]
+  (def rtm-conn (connect token))
+  (throw (Exception. "Set API key as $SLACK_TOKEN environment variable.")))
 
 (def events-publication (:events-publication rtm-conn))
 
 (defn message-handler [message]
-  (println (:text message)))
+  (println [123 (:text message)]))
 
 (def message-receiver message-handler)
-
-(use '[clojure.java.shell :only [sh]])
-(require '[clojure.string :as str])
 
 (defn parse-deploy-string [deploy-string]
   (zipmap [:deploy :target :branch] (str/split deploy-string #" "))
@@ -27,7 +30,7 @@
 
 (defn dispatcher [func args]
   (let [args (subs args 1) commands
-      { :deploy (deploy args), }] 
+      { :deploy (deploy args), }]
   (func commands))
 )
 
@@ -43,12 +46,13 @@
 ;;   "Sends a message to the channel."
 ;;   (println (conj "Hi" message))
 ;; )
+
 (defn -main
-  ;; (println (System/getenv "SLACK_TOKEN")))
   [& args]
   (sub-to-event events-publication :message message-receiver)
   ;; (-> (deploy "ls") println )
 
-  ;; (println (:deploy dispatcher))
-  (println (message-handler "!deploy staging master"))
+  (println (:deploy dispatcher))
+  ;; (println (message-handler "!deploy staging master"))
+  ;; (println rtm-conn)
 )
