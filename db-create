@@ -1,0 +1,3 @@
+(def conn (r/connect :host "127.0.0.1" :port 28015 :db "slack"))
+(r/run (r/db-create "slack") conn)
+(-> (r/db "slack") (r/table-create "messages") (r/run conn))
