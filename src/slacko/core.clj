@@ -15,12 +15,6 @@
   (zipmap [:deploy :target :branch] (str/split deploy-string #" "))
 )
 
-;; (defn dispatcher [func args]
-  ;; (let [args (subs args 1) commands
-  ;;     { :deploy (deploy args), }]
-  ;; (func commands))
-;; )
-
 (defn deploy [message]
   (let [vars (parse-deploy-string (:text message))]
   (get :errors (sh "/bin/sh" "deploy.sh" (:target vars) (:branch vars) "Deploy successful.")))
@@ -43,6 +37,5 @@
 
 (defn -main
   [& args]
-  ;; (sub-to-event events-publication :message message-receiver)
-  (println (deploy {:text "!deploy staging" :dave "PEW"}))
+  (sub-to-event events-publication :message message-receiver)
 )
