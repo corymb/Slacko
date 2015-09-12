@@ -15,13 +15,14 @@
   (zipmap [:deploy :target :branch] (str/split deploy-string #" "))
 )
 
-(defn send-message [message]
-  "Sends a message to the channel."
+(defn send-message 
+  ([message] (send-message message "general"))
+  ([message room]
   (send-event (:dispatcher rtm-conn)
               {:type "message"
                :text message
-               :channel "C0AFV93U6"
-               :user "U0AFVUBLM"}))
+               :channel (->> rtm-conn :start :channels (filter #(= (:name %) room)) first :id)
+               :user (->> rtm-conn :start :users (filter :is_bot) :id)})))
 
 (defn deploy [message]
   (let [vars (parse-deploy-string (:text message))]
