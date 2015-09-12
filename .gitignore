@@ -10,3 +10,6 @@ pom.xml.asc
 .hgignore
 .hg/
 .envvars
+/rethinkdb_data
+/slack
+deploy.sh
